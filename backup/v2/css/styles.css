@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:wght@500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #0f5e6eff;
+
+  --text: #272727;
+  --text-light: #555555;
+
+  --grey-100: #f8f8f8;
+  --grey-200: #efefef;
+  --grey-300: #e4e4e4;
+
+  --border: #d8d8d8;
+
+  --radius: 12px;
+  --radius-large: 20px;
+
+  --max-width: 1200px;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+
+  background: var(--grey-100);
+  color: var(--text);
+
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  line-height: 1.8;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+h1,
+h2 {
+  font-family: "Alegreya", serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text);
+
+  margin-top: 0;
+  margin-bottom: 1.75rem;
+
+  line-height: 1.15;
+
+  max-width: 760px;
+}
+
+h1 {
+  font-size: clamp(2.75rem, 4vw, 2.75rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 3vw, 2.5rem);
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
+p,
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.lead {
+ margin-bottom: 2rem;
+ max-width: 960px;
+}
+
+.hero .lead {
+ margin-bottom: 2rem;
+}
+
+.hero {
+  background: var(--primary);
+  color: white;
+
+  padding: 6rem 0 6rem;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p {
+  color: white;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  margin: 2rem 0 2.5rem;
+}
+
+.badge {
+  background: rgba(255,255,255,0.15);
+
+  border-radius: 999px;
+
+  padding: 0.55rem 1rem;
+
+  color: white;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn,
+button.btn {
+  display: inline-block;
+
+  background: var(--primary);
+  color: white;
+
+  border: none;
+  border-radius: var(--radius);
+
+  padding: 0.75rem 1.5rem;
+
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease,
+              opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.92;
+}
+
+.hero .btn {
+  background: white;
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   Alternating Sections
+   ========================================================================== */
+
+.section-light {
+  background: var(--grey-100);
+}
+
+.section-grey {
+  background: var(--grey-200);
+}
+
+.section-purple {
+  background: var(--primary);
+  color: white;
+}
+
+.section-purple h1,
+.section-purple h2,
+.section-purple h3,
+.section-purple p {
+  color: white;
+}
+
+/* ==========================================================================
+   Grid
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.cards {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  padding: 2rem;
+}
+
+.section-light .card {
+  background: #ffffff;
+}
+
+.section-grey .card {
+  background: #f8f8f8;
+}
+
+.card h3:last-child,
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Problem List
+   ========================================================================== */
+
+.problem-list {
+  display: grid;
+  gap: 1rem;
+
+  margin-top: 2rem;
+}
+
+.problem-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  padding: 1rem 1.25rem;
+}
+
+.section-light .problem-item {
+  background: #ffffff;
+}
+
+.section-grey .problem-item {
+  background: #f8f8f8;
+}
+
+/* ==========================================================================
+   Curriculum Accordion
+   ========================================================================== */
+
+.accordion {
+  margin-top: 3rem;
+}
+
+.acc,
+.accordion-button {
+  width: 100%;
+
+  background: #fafafa;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  padding: 1.5rem 2rem;
+  margin-bottom: 0.75rem;
+
+  text-align: left;
+
+  font-family: "Nunito", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+
+  color: var(--text);
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.acc:hover,
+.accordion-button:hover {
+  background: #f3f3f3;
+  border-color: var(--primary);
+}
+
+.acc.active,
+.accordion-button.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.panel,
+.accordion-panel {
+  display: none;
+
+  background: #fafafa;
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+
+  margin-top: -0.25rem;
+  margin-bottom: 1rem;
+
+  padding: 2rem;
+}
+
+/* ==========================================================================
+   Instructor
+   ========================================================================== */
+
+.instructor {
+  display: grid;
+
+  grid-template-columns: 140px 1fr;
+
+  gap: 2rem;
+
+  align-items: center;
+}
+
+.instructor-photo {
+  width: 140px;
+  height: 140px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  background: var(--grey-300);
+}
+
+.instructor-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   Testimonials
+   ========================================================================== */
+
+.testimonial {
+  border-left: 4px solid var(--primary);
+  padding-left: 1.5rem;
+}
+
+.testimonial-author {
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Cohorts
+   ========================================================================== */
+
+.cohort-card {
+  background: #fafafa;
+
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-large);
+
+  padding: 2rem;
+}
+
+.cohort-price {
+  font-size: 2rem;
+  font-weight: 700;
+
+  margin: 1.5rem 0;
+}
+
+/* ==========================================================================
+   Final CTA
+   ========================================================================== */
+
+.final-cta {
+  background: var(--primary);
+
+  color: white;
+
+  padding: 8rem 2rem;
+}
+
+.final-cta h1,
+.final-cta h2,
+.final-cta h3,
+.final-cta p {
+  color: white;
+}
+
+.final-cta .btn {
+  background: white;
+  color: var(--primary);
+  margin-top: 1.5em;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+footer {
+  background: var(--grey-200);
+
+  border-top: 1px solid var(--border);
+
+  padding: 3rem 0;
+
+  text-align: center;
+}
+
+/* ==========================================================================
+   Mobile
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .instructor {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .instructor-photo {
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 5rem 0;
+  }
+
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  h1 {
+    font-size: 2.75rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .badges {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

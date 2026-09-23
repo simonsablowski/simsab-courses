@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>You're enrolled — Simon Sablowski</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="/">Simon Sablowski</a>
+    </header>
+  </div>
+
+  <div class="wrap">
+    <div class="prose" style="padding-top: 56px;">
+      <h1>You're enrolled</h1>
+      <p>Thanks — your seat is confirmed. A receipt is on its way to your email from Stripe, and we'll follow up separately with joining details ahead of the cohort start date.</p>
+      <p class="muted">If anything looks off, write to <a href="mailto:hello@simsab.net">hello@simsab.net</a> and mention this reference: <span id="ref"></span></p>
+      <p><a href="/">Back to all courses</a></p>
+    </div>
+  </div>
+
+  <script>
+    const id = new URLSearchParams(window.location.search).get("session_id");
+    document.getElementById("ref").textContent = id || "—";
+  </script>
+</body>
+</html>

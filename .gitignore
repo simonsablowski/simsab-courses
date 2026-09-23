@@ -1,0 +1,20 @@
+# Dependencies, installed with npm install
+node_modules/
+
+# Local Wrangler state and build output
+.wrangler/
+
+# Local secrets for wrangler pages dev (Stripe keys)
+.dev.vars
+.env*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Git bundles
+*.bundle
+
+# Delivery archives with copies of project files, not part of the site
+*.zip

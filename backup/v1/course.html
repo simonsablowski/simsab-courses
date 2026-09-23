@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course — Simon Sablowski</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="/">Simon Sablowski</a>
+      <div class="currency-toggle">
+        <button data-currency="eur">€ EUR</button>
+        <button data-currency="usd">$ USD</button>
+      </div>
+    </header>
+  </div>
+
+  <div class="wrap">
+    <div class="prose" style="padding-top: 40px;">
+      <h1 id="course-title">Loading…</h1>
+      <p id="course-description" class="muted"></p>
+      <ul id="course-highlights" style="padding-left: 20px; margin-bottom: 32px;"></ul>
+
+      <h2 style="font-size: 1.1rem;">Choose a cohort</h2>
+      <div id="cohort-list" class="cohorts"></div>
+
+      <p id="price-hint" class="muted"></p>
+      <button id="enroll-btn" class="btn-primary">Enroll — pay by card or PayPal</button>
+      <p id="checkout-error" class="notice error"></p>
+    </div>
+
+    <footer>
+      Questions before you enroll? Write to <a href="mailto:contact@simsab.net">contact@simsab.net</a>.
+    </footer>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/course.js"></script>
+</body>
+</html>

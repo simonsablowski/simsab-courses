@@ -1,0 +1,11 @@
+{
+  "name": "simsab-courses",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public"
+  },
+  "devDependencies": {
+    "wrangler": "^3"
+  }
+}

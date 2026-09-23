@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>You're enrolled — Simon Sablowski & Giuseppe De Simone</title>
+  <meta name="description" content="Enrolment confirmation and details.">
+  <meta property="og:title" content="You're enrolled — Simon Sablowski & Giuseppe De Simone">
+  <meta property="og:description" content="Enrolment confirmation and details.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="container">
+        <span class="eyebrow">Success</span>
+        <h1>You're enrolled</h1>
+      </div>
+    </header>
+    <main class="main-content">
+      <section>
+        <div class="container">
+          <p class="lead">
+            Thanks, your seat is confirmed. You'll receive a Stripe receipt and joining details before the course.
+          </p>
+          <p class="lead">
+            If anything looks off, write to <a href="mailto:contact@simsab.net">contact@simsab.net</a>
+            and mention this reference: <strong id="ref">—</strong>
+          </p>
+          <p><a href="/" class="btn">Back to all courses</a></p>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <p>
+          © Simon Sablowski & Giuseppe De Simone
+          <a href="/legal-notice">Legal notice</a>
+          <a href="/privacy-policy">Privacy policy</a>
+        </p>
+      </div>
+    </footer>
+  </div>
+  <script>
+    const id = new URLSearchParams(window.location.search).get("session_id");
+    document.getElementById("ref").textContent = id || "—";
+  </script>
+</body>
+</html>
