@@ -944,3 +944,10 @@ button.btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.cohort-price-net {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-light);
+}

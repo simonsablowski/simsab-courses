@@ -6,6 +6,9 @@
 
 const CONTACT_EMAIL = 'contact@simsab.net';
 
+// German VAT rate, used to show the gross price next to net prices.
+const GERMAN_VAT_RATE = 0.19;
+
 // Set to '/terms' once the terms and conditions page is published.
 const TERMS_URL = '';
 
@@ -140,8 +143,21 @@ async function initEnrollWidget() {
     if (!c) return;
     const currency = getCurrency();
     const base = currency === 'eur' ? c.price_eur : c.price_usd;
-    const label = vatLabel(currency === 'eur' ? c.tax_behavior_eur : c.tax_behavior_usd);
+    const taxBehavior = currency === 'eur' ? c.tax_behavior_eur : c.tax_behavior_usd;
 
+    // Net prices: show the gross price for German customers first, as
+    // required for consumers, and the net price below for business buyers.
+    // Stripe calculates the exact VAT for other countries at checkout.
+    if (taxBehavior === 'exclusive') {
+      const gross = Math.round(base * (1 + GERMAN_VAT_RATE) * 100) / 100;
+      priceDisplay.innerHTML = `
+        ${escapeHtml(formatMoney(gross, currency))}
+        <span class="cohort-price-note">incl. VAT</span>
+        <div class="cohort-price-net">${escapeHtml(formatMoney(base, currency))} excl. VAT</div>`;
+      return;
+    }
+
+    const label = vatLabel(taxBehavior);
     priceDisplay.innerHTML = `${escapeHtml(formatMoney(base, currency))}${
       label ? ` <span class="cohort-price-note">${escapeHtml(label)}</span>` : ''
     }`;
