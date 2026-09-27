@@ -27,10 +27,10 @@ function setCurrency(code) {
  * @returns {string}
  */
 function formatMoney(amount, currency) {
-  const isEur = currency.toLowerCase() === 'eur';
-  return new Intl.NumberFormat(isEur ? 'de-DE' : 'en-US', {
+  return new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: currency.toUpperCase(),
+    minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
 }
