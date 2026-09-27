@@ -79,7 +79,7 @@ function formatDateRange(start, end) {
 }
 
 /**
- * Format the daily course times, e.g. "09:00–13:00 CET (Berlin time)".
+ * Format the daily course times, e.g. "09:00–13:00 CET".
  * Times are entered in Berlin time. The label switches between CET and
  * CEST depending on the course date.
  * @param {string} date - course start date, "YYYY-MM-DD"
@@ -104,7 +104,7 @@ function formatTimeRange(date, startTime, endTime) {
     if (offset === 'GMT+2') zone = 'CEST';
   }
 
-  return `${startTime}–${endTime} ${zone} (Berlin time)`;
+  return `${startTime}–${endTime} ${zone}`;
 }
 
 /**
