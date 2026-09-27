@@ -62,9 +62,15 @@ export async function onRequestGet({ env }) {
         cohort_id: metadata.cohort_id,
         start_date: metadata.start_date,
         end_date: metadata.end_date,
+        // Daily course times in Berlin time, e.g. "09:00" and "13:00".
+        start_time: metadata.start_time || "",
+        end_time: metadata.end_time || "",
         seats_left: Math.max(0, maxSeats - seatsTaken),
         price_eur: eurPrice ? eurPrice.unit_amount / 100 : 0,
         price_usd: usdPrice ? usdPrice.unit_amount / 100 : 0,
+        // "inclusive", "exclusive" or "unspecified", as set on the Stripe price.
+        tax_behavior_eur: eurPrice?.tax_behavior || "unspecified",
+        tax_behavior_usd: usdPrice?.tax_behavior || "unspecified",
       });
     }
 

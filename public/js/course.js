@@ -4,6 +4,11 @@
  * ==========================================================================
  */
 
+const CONTACT_EMAIL = 'contact@simsab.net';
+
+// Set to '/terms' once the terms and conditions page is published.
+const TERMS_URL = '';
+
 async function initEnrollWidget() {
   const widget = document.getElementById('enroll');
   if (!widget) return;
@@ -14,7 +19,39 @@ async function initEnrollWidget() {
   const cohortList = document.getElementById('cohort-list');
   const priceDisplay = document.getElementById('price-display');
   const enrollBtn = document.getElementById('enroll-btn');
-  const checkoutError = document.getElementById('checkout-error');
+
+  /**
+   * Error message and booking notes below the "Enrol now" button.
+   * Added here so the markup lives in one place instead of in every course page.
+   */
+  const checkoutError = document.createElement('p');
+  checkoutError.id = 'checkout-error';
+  checkoutError.className = 'notice error';
+  checkoutError.setAttribute('role', 'alert');
+  checkoutError.hidden = true;
+
+  const enrolNotes = document.createElement('div');
+  enrolNotes.className = 'enrol-notes';
+  enrolNotes.innerHTML = `
+    <p>
+      Booking for several people? Email
+      <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
+      and we will send you an offer and a single invoice.
+    </p>
+    ${
+      TERMS_URL
+        ? `<p>By enrolling, you accept our <a href="${TERMS_URL}">terms and conditions</a>.</p>`
+        : ''
+    }`;
+
+  if (enrollBtn) {
+    enrollBtn.after(checkoutError, enrolNotes);
+  }
+
+  function showError(message) {
+    checkoutError.textContent = message;
+    checkoutError.hidden = !message;
+  }
 
   /**
    * Mobile enrollment bar
@@ -69,6 +106,9 @@ async function initEnrollWidget() {
     const c = cohorts.find((item) => item.seats_left > 0) || cohorts[0];
     selectedCohortId = c.cohort_id;
 
+    const times = formatTimeRange(c.start_date, c.start_time, c.end_time);
+    const multiDay = c.end_date && c.end_date !== c.start_date;
+
     cohortList.innerHTML = `
       <div class="cohort-option">
         <div class="cohort-content">
@@ -80,7 +120,13 @@ async function initEnrollWidget() {
             ${c.seats_left === 0 ? 'Full' : `${c.seats_left} seats left`}
           </div>
         </div>
-      </div>`;
+      </div>
+      ${times ? `<p class="cohort-time">${multiDay ? 'Each day ' : ''}${escapeHtml(times)}</p>` : ''}`;
+
+    if (enrollBtn && c.seats_left === 0) {
+      enrollBtn.disabled = true;
+      enrollBtn.textContent = 'Fully booked';
+    }
   }
 
   function currentCohort() {
@@ -94,13 +140,16 @@ async function initEnrollWidget() {
     if (!c) return;
     const currency = getCurrency();
     const base = currency === 'eur' ? c.price_eur : c.price_usd;
+    const label = vatLabel(currency === 'eur' ? c.tax_behavior_eur : c.tax_behavior_usd);
 
-    priceDisplay.textContent = formatMoney(base, currency);
+    priceDisplay.innerHTML = `${escapeHtml(formatMoney(base, currency))}${
+      label ? ` <span class="cohort-price-note">${escapeHtml(label)}</span>` : ''
+    }`;
   }
 
   if (enrollBtn) {
     enrollBtn.addEventListener('click', async () => {
-      if (checkoutError) checkoutError.textContent = '';
+      showError('');
 
       enrollBtn.disabled = true;
       enrollBtn.textContent = 'Redirecting…';
@@ -118,11 +167,22 @@ async function initEnrollWidget() {
 
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.error || 'Something went wrong');
+        if (!res.ok) {
+          const err = new Error(data.error || 'Something went wrong');
+          // 404 and 409 carry messages written for visitors, such as
+          // "This cohort is full". Other errors are technical.
+          err.userMessage = [404, 409].includes(res.status) ? data.error : '';
+          throw err;
+        }
 
         window.location.href = data.url;
       } catch (e) {
         console.error('Checkout error:', e);
+        showError(
+          e.userMessage
+            ? `${e.userMessage}. Please email ${CONTACT_EMAIL} if you have questions.`
+            : `Enrolment could not be started. Please try again, or email ${CONTACT_EMAIL}.`
+        );
 
         enrollBtn.disabled = false;
         enrollBtn.textContent = 'Enrol now';

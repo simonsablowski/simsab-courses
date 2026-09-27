@@ -5,19 +5,14 @@
  */
 
 /**
- * Get current user currency preference (defaults to 'eur').
+ * Currency used for prices and checkout.
+ * The currency selector was removed, so this is fixed to euros. Browser
+ * storage is no longer read, so an old "usd" value from an earlier visit
+ * cannot switch the page to dollars.
  * @returns {string}
  */
 function getCurrency() {
-  return localStorage.getItem('currency') || 'eur';
-}
-
-/**
- * Set and persist user currency preference.
- * @param {string} code
- */
-function setCurrency(code) {
-  localStorage.setItem('currency', code);
+  return 'eur';
 }
 
 /**
@@ -36,14 +31,28 @@ function formatMoney(amount, currency) {
 }
 
 /**
+ * Parse a date string. Plain "YYYY-MM-DD" values are read as calendar dates,
+ * not as UTC midnight, so visitors west of UTC do not see the previous day.
+ * @param {string|Date} value
+ * @returns {Date}
+ */
+function parseCourseDate(value) {
+  if (typeof value === 'string') {
+    const m = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
+  return new Date(value);
+}
+
+/**
  * Format start and end dates into a readable date range string.
  * @param {string|Date} start
  * @param {string|Date} end
  * @returns {string}
  */
 function formatDateRange(start, end) {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
+  const startDate = parseCourseDate(start);
+  const endDate = parseCourseDate(end);
 
   if (isNaN(startDate) || isNaN(endDate)) return '';
 
@@ -67,6 +76,46 @@ function formatDateRange(start, end) {
   } else {
    return `${startDay} ${startMonth} ${startYear} – ${endDay} ${endMonth} ${endYear}`;
   }
+}
+
+/**
+ * Format the daily course times, e.g. "09:00–13:00 CET (Berlin time)".
+ * Times are entered in Berlin time. The label switches between CET and
+ * CEST depending on the course date.
+ * @param {string} date - course start date, "YYYY-MM-DD"
+ * @param {string} startTime - "HH:MM"
+ * @param {string} endTime - "HH:MM"
+ * @returns {string}
+ */
+function formatTimeRange(date, startTime, endTime) {
+  if (!startTime || !endTime) return '';
+
+  let zone = 'CET';
+  const m = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) {
+    // Midday UTC on the course date avoids edge cases around the switch.
+    const probe = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12));
+    const offset = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Berlin',
+      timeZoneName: 'shortOffset',
+    })
+      .formatToParts(probe)
+      .find((part) => part.type === 'timeZoneName')?.value;
+    if (offset === 'GMT+2') zone = 'CEST';
+  }
+
+  return `${startTime}–${endTime} ${zone} (Berlin time)`;
+}
+
+/**
+ * Text shown after the price, depending on the Stripe price's tax behaviour.
+ * @param {string} taxBehavior - "inclusive", "exclusive" or "unspecified"
+ * @returns {string}
+ */
+function vatLabel(taxBehavior) {
+  if (taxBehavior === 'inclusive') return 'incl. VAT';
+  if (taxBehavior === 'exclusive') return 'plus VAT';
+  return '';
 }
 
 /**
@@ -145,19 +194,24 @@ async function initCourseIndex() {
     const sortedCourses = Array.from(courses.values())
       .map((course) => {
         course.cohorts.sort(
-          (a, b) => new Date(a.start_date) - new Date(b.start_date)
+          (a, b) => parseCourseDate(a.start_date) - parseCourseDate(b.start_date)
         );
         return course;
       })
       .sort(
         (a, b) =>
-          new Date(a.cohorts[0].start_date) -
-          new Date(b.cohorts[0].start_date)
+          parseCourseDate(a.cohorts[0].start_date) -
+          parseCourseDate(b.cohorts[0].start_date)
       );
 
     courseList.innerHTML = sortedCourses
       .map((course) => {
         const nextCohort = course.cohorts[0];
+        const nextTimes = formatTimeRange(
+          nextCohort.start_date,
+          nextCohort.start_time,
+          nextCohort.end_time
+        );
 
         const highlightsHtml = course.highlights.length
           ? `
@@ -180,6 +234,7 @@ async function initCourseIndex() {
             <p class="course-next-cohort">
               <strong>Next cohort:</strong><br>
               ${formatDateRange(nextCohort.start_date, nextCohort.end_date)}
+              ${nextTimes ? `<br><span class="muted">${escapeHtml(nextTimes)}</span>` : ''}
             </p>
 
             <a class="btn" href="/${encodeURIComponent(course.course_slug)}">

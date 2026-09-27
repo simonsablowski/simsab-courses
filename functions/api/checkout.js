@@ -81,6 +81,27 @@ export async function onRequestPost({ request, env }) {
 
       allow_promotion_codes: "true",
 
+      // Tax: Stripe Tax calculates VAT from the billing address and applies
+      // reverse charge when a business enters a valid EU VAT ID.
+      "automatic_tax[enabled]": "true",
+      billing_address_collection: "required",
+
+      // Shows the "I'm purchasing as a business" option with fields for
+      // the company name and VAT ID.
+      "tax_id_collection[enabled]": "true",
+
+      // Stores the buyer as a Stripe customer, so the company name and
+      // VAT ID are saved and appear on the invoice.
+      customer_creation: "always",
+
+      // Creates an invoice after payment. Stripe emails it together with
+      // the receipt when "Successful payments" emails are switched on.
+      "invoice_creation[enabled]": "true",
+      "invoice_creation[invoice_data][description]":
+        `${cohort.name}${cohort.metadata.start_date ? ` (${cohort.metadata.start_date})` : ""}`,
+      "invoice_creation[invoice_data][metadata][course_slug]": course_slug,
+      "invoice_creation[invoice_data][metadata][cohort_id]": cohort_id,
+
       success_url:
         `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
 
@@ -93,14 +114,23 @@ export async function onRequestPost({ request, env }) {
 
       "custom_fields[0][key]": "first_name",
       "custom_fields[0][label][type]": "custom",
-      "custom_fields[0][label][custom]": "First name",
+      "custom_fields[0][label][custom]": "Participant first name",
       "custom_fields[0][type]": "text",
 
       "custom_fields[1][key]": "last_name",
       "custom_fields[1][label][type]": "custom",
-      "custom_fields[1][label][custom]": "Last name",
+      "custom_fields[1][label][custom]": "Participant last name",
       "custom_fields[1][type]": "text",
     });
+
+    // Asks buyers to accept the terms and conditions at checkout.
+    // Set REQUIRE_TERMS=true in the Cloudflare environment only after the
+    // terms page is published AND its URL is entered in the Stripe
+    // Dashboard (Settings > Business > Public details). Otherwise Stripe
+    // rejects the checkout session.
+    if (env.REQUIRE_TERMS === "true") {
+      params.set("consent_collection[terms_of_service]", "required");
+    }
 
     const session = await stripePost(env, "/v1/checkout/sessions", params);
 
