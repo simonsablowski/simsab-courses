@@ -3,15 +3,6 @@ import { stripeGet, stripePost } from "../_lib/stripe.js";
 
 export async function onRequestPost({ request, env }) {
   try {
-    // Safety guard while the checkout flow is still being developed.
-    // Remove this deliberately when you are ready to accept live payments.
-    if (!env.STRIPE_SECRET_KEY?.startsWith("sk_test_")) {
-      return json(
-        { error: "Checkout is currently restricted to Stripe test mode." },
-        500
-      );
-    }
-
     const { course_slug, cohort_id, currency } = await request.json();
 
     if (!course_slug || !cohort_id || !["eur", "usd"].includes(currency)) {
