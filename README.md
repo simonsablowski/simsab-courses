@@ -129,3 +129,23 @@ Two things to fill in before this renders correctly:
   field (`total_details.breakdown.discounts[].discount.promotion_code`)
   that's worth double-checking against a real test payment — if it comes
   back empty, it may need `promotion_code` expanded one level further.
+
+## Git
+
+The project is versioned in the private repository
+`simonsablowski/simsab-courses`. The following are not part of the
+repository (see `.gitignore`): `node_modules/`, the local Wrangler state in
+`.wrangler/`, local secrets in `.dev.vars` and `.env*` files, operating system
+files, Git bundles and `.zip` archives.
+
+Commit messages are written in English: short, in the imperative mood and
+factual (for example "Add favicons to all pages").
+
+Typical workflow:
+
+```
+git pull
+git add -A
+git commit -m "Describe the change"
+git push
+```
