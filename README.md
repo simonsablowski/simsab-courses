@@ -132,7 +132,7 @@ Two things to fill in before this renders correctly:
 
 ## Git
 
-The project is versioned in the private repository
+The project is versioned in the public repository
 `simonsablowski/simsab-courses`. The following are not part of the
 repository (see `.gitignore`): `node_modules/`, the local Wrangler state in
 `.wrangler/`, local secrets in `.dev.vars` and `.env*` files, operating system
